@@ -3,7 +3,7 @@ import logging
 import urllib.parse as urlparse
 from typing import Dict, Generator, Optional, Tuple, Union, cast
 
-from homeassistant_api.models import Domain, Entity, Group, State
+from homeassistant_api.models import Domain, Entity, Group, Label, LabelColors, State
 from homeassistant_api.models.states import Context
 from homeassistant_api.models.websocket import (
     EventResponse,
@@ -193,6 +193,61 @@ class WebsocketClient(RawWebsocketClient):
         For now, just call the :py:meth":`get_domains` method and parsing the result.
         """
         return self.get_domains()[domain]
+
+    def get_labels(self):
+        """Get label registry entries."""
+
+        return list(
+            Label.from_json(device_entry)
+            for device_entry in cast(
+                list[dict[str, JSONType]],
+                cast(
+                    ResultResponse, self.recv(self.send("config/label_registry/list"))
+                ).result,
+            )
+        )
+
+    def create_label(
+        self,
+        name: str,
+        color: Optional[LabelColors] = None,
+        description: Optional[str] = None,
+        icon: Optional[str] = None,
+    ) -> None:
+        """Create a label."""
+        self.recv(
+            self.send(
+                "config/label_registry/create",
+                name=name,
+                color=color,
+                description=description,
+                icon=icon,
+            )
+        )
+
+    def delete_label(self, label_id: str) -> None:
+        """Delete a label."""
+        self.recv(self.send("config/label_registry/delete", label_id=label_id))
+
+    def update_label(
+        self,
+        label_id: str,
+        name: Optional[str] = None,
+        color: Optional[LabelColors] = None,
+        description: Optional[str] = None,
+        icon: Optional[str] = None,
+    ) -> None:
+        """Update a label."""
+        self.recv(
+            self.send(
+                "config/label_registry/create",
+                label_id=label_id,
+                name=name,
+                color=color,
+                description=description,
+                icon=icon,
+            )
+        )
 
     def trigger_service(
         self,

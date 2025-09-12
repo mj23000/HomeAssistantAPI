@@ -5,10 +5,13 @@ from .domains import Domain, Service, ServiceField
 from .entity import Entity, Group
 from .events import Event
 from .history import History
+from .label import Label, LabelColors
 from .logbook import LogbookEntry
 from .states import State
 
 __all__ = (
+    "Label",
+    "LabelColors",
     "Domain",
     "Service",
     "BaseModel",
