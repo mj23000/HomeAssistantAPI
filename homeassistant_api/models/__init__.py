@@ -3,6 +3,12 @@
 from .base import BaseModel
 from .domains import Domain, Service, ServiceField
 from .entity import Entity, Group
+from .entity_registry import (
+    EntityCategory,
+    EntityConfigEntry,
+    RegistryEntryDisabler,
+    RegistryEntryHider,
+)
 from .events import Event
 from .history import History
 from .logbook import LogbookEntry
@@ -21,4 +27,8 @@ __all__ = (
     "History",
     "LogbookEntry",
     "State",
+    "EntityConfigEntry",
+    "EntityCategory",
+    "RegistryEntryDisabler",
+    "RegistryEntryHider",
 )
