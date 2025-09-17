@@ -1,5 +1,6 @@
 """File for models used in responses from entity registry."""
 
+from datetime import datetime
 from enum import Enum
 from typing import Any, Dict, List, Optional
 
@@ -37,7 +38,7 @@ class RegistryEntryHider(Enum):
     USER = "user"
 
 
-class EntityConfigEntry(BaseModel):
+class SimplifiedEntityConfigEntry(BaseModel):
     """An entity configuration entry. This is the model that Home Assistant returns, but not what is used internally."""
 
     area_id: Optional[str]
@@ -83,3 +84,20 @@ class DisplayConfigEntries(BaseModel):
 
     entity_categories: Dict[str, EntityCategory]
     entities: List[DisplayConfigEntry]
+
+
+class EntityConfigEntry(SimplifiedEntityConfigEntry):
+    """An entity configuration entry. This is the model that Home Assistant returns, but not what is used internally."""
+
+    # TODO: Ensure valid default values
+    previous_unique_id: Optional[str] = None
+    aliases: set[str] = set()
+    capabilities: Optional[Dict[str, str]]
+    created_at: datetime
+    device_class: Optional[str]
+    domain: Optional[str] = None
+    modified_at: datetime
+    original_device_class: Optional[str]
+    original_icon: Optional[str]
+    supported_features: Optional[int] = None
+    unit_of_measurement: Optional[str] = None

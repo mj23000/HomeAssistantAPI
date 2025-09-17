@@ -1,7 +1,7 @@
 import contextlib
 import logging
 import urllib.parse as urlparse
-from typing import Dict, Generator, Optional, Tuple, Union, cast
+from typing import Dict, Generator, List, Optional, Tuple, Union, cast
 
 from homeassistant_api.models import (
     DisplayConfigEntries,
@@ -9,6 +9,7 @@ from homeassistant_api.models import (
     Entity,
     EntityConfigEntry,
     Group,
+    SimplifiedEntityConfigEntry,
     State,
 )
 from homeassistant_api.models.states import Context
@@ -201,10 +202,10 @@ class WebsocketClient(RawWebsocketClient):
         """
         return self.get_domains()[domain]
 
-    def get_entity_registry(self) -> Tuple[EntityConfigEntry]:
+    def get_entity_registry(self) -> Tuple[SimplifiedEntityConfigEntry]:
         """Get entities from entity_registry."""
         return tuple(
-            EntityConfigEntry.from_json(config_entry)
+            SimplifiedEntityConfigEntry.from_json(config_entry)
             for config_entry in cast(
                 list[dict[str, JSONType]],
                 cast(
@@ -222,6 +223,20 @@ class WebsocketClient(RawWebsocketClient):
                 cast(
                     ResultResponse,
                     self.recv(self.send("config/entity_registry/list_for_display")),
+                ).result,
+            )
+        )
+
+    def get_entity_from_registry(self, entity_id: str) -> EntityConfigEntry:
+        """Get an entity from entity_registry."""
+        return EntityConfigEntry.from_json(
+            cast(
+                dict[str, JSONType],
+                cast(
+                    ResultResponse,
+                    self.recv(
+                        self.send("config/entity_registry/get", entity_id=entity_id)
+                    ),
                 ).result,
             )
         )

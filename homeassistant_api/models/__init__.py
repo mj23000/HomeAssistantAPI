@@ -10,6 +10,7 @@ from .entity_registry import (
     EntityConfigEntry,
     RegistryEntryDisabler,
     RegistryEntryHider,
+    SimplifiedEntityConfigEntry,
 )
 from .events import Event
 from .history import History
@@ -29,10 +30,11 @@ __all__ = (
     "History",
     "LogbookEntry",
     "State",
-    "EntityConfigEntry",
+    "SimplifiedEntityConfigEntry",
     "EntityCategory",
     "RegistryEntryDisabler",
     "RegistryEntryHider",
     "DisplayConfigEntry",
     "DisplayConfigEntries",
+    "EntityConfigEntry",
 )
