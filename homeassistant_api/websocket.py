@@ -241,6 +241,27 @@ class WebsocketClient(RawWebsocketClient):
             )
         )
 
+    def get_entities_from_registry(
+        self, entity_ids: List[str]
+    ) -> Dict[str, Optional[EntityConfigEntry]]:
+        """Get defined entities from entity_registry."""
+        return {
+            domain: EntityConfigEntry.from_json(config_entry)
+            if config_entry is not None
+            else None
+            for domain, config_entry in cast(
+                dict[str, dict[str, JSONType]],
+                cast(
+                    ResultResponse,
+                    self.recv(
+                        self.send(
+                            "config/entity_registry/get_entries", entity_ids=entity_ids
+                        )
+                    ),
+                ).result,
+            ).items()
+        }
+
     def trigger_service(
         self,
         domain: str,
