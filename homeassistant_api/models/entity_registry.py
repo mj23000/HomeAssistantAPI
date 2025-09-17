@@ -3,6 +3,8 @@
 from enum import Enum
 from typing import Any, Dict, List, Optional
 
+from pydantic import Field
+
 from .base import BaseModel
 
 
@@ -59,3 +61,25 @@ class EntityConfigEntry(BaseModel):
     platform: str
     translation_key: Optional[str]
     unique_id: str
+
+
+class DisplayConfigEntry(BaseModel):
+    """An entity display entry. This is the model that Home Assistant returns, but not what is used internally."""
+
+    area_id: Optional[str] = Field(alias="ai", default=None)
+    device_id: Optional[str] = Field(alias="di", default=None)
+    entity_category: Optional[int] = Field(alias="ec", default=None)
+    entity_id: str = Field(alias="ei")
+    entity_name: Optional[str] = Field(alias="en", default=None)
+    has_name: Optional[bool] = Field(alias="hn", default=None)
+    icon: Optional[str] = Field(alias="ic", default=None)
+    labels: Optional[List[str]] = Field(alias="lb", default=None)
+    platform: str = Field(alias="pl")
+    translation_key: Optional[str] = Field(alias="tk", default=None)
+
+
+class DisplayConfigEntries(BaseModel):
+    """Entity display entries. This is the model that Home Assistant returns, but not what is used internally."""
+
+    entity_categories: Dict[str, EntityCategory]
+    entities: List[DisplayConfigEntry]

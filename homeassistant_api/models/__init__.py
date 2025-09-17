@@ -4,6 +4,8 @@ from .base import BaseModel
 from .domains import Domain, Service, ServiceField
 from .entity import Entity, Group
 from .entity_registry import (
+    DisplayConfigEntries,
+    DisplayConfigEntry,
     EntityCategory,
     EntityConfigEntry,
     RegistryEntryDisabler,
@@ -31,4 +33,6 @@ __all__ = (
     "EntityCategory",
     "RegistryEntryDisabler",
     "RegistryEntryHider",
+    "DisplayConfigEntry",
+    "DisplayConfigEntries",
 )
