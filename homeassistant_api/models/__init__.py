@@ -6,6 +6,7 @@ from .entity import Entity, Group
 from .events import Event
 from .history import History
 from .logbook import LogbookEntry
+from .logger import LoggerInfo
 from .states import State
 
 __all__ = (
@@ -21,4 +22,5 @@ __all__ = (
     "History",
     "LogbookEntry",
     "State",
+    "LoggerInfo",
 )
