@@ -3,7 +3,14 @@ import logging
 import urllib.parse as urlparse
 from typing import Dict, Generator, Optional, Tuple, Union, cast
 
-from homeassistant_api.models import Domain, Entity, Group, LoggerInfo, State
+from homeassistant_api.models import (
+    Domain,
+    Entity,
+    Group,
+    LoggerInfo,
+    LogPersistence,
+    State,
+)
 from homeassistant_api.models.states import Context
 from homeassistant_api.models.websocket import (
     EventResponse,
@@ -202,6 +209,20 @@ class WebsocketClient(RawWebsocketClient):
             for domain in cast(
                 list[dict[str, JSONType]],
                 cast(ResultResponse, self.recv(self.send("logger/log_info"))).result,
+            )
+        )
+
+    def configure_integration_logger(
+        self, integration: str, level: int, persistence: LogPersistence
+    ) -> None:
+        """Configure an integration's logger."""
+
+        self.recv(
+            self.send(
+                "logger/integration_log_level",
+                integration=integration,
+                level=logging.getLevelName(level),
+                persistence=persistence,
             )
         )
 
