@@ -2,14 +2,15 @@
 
 from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Literal, Optional, TypedDict
 
 from pydantic import Field
+from typing_extensions import NotRequired
 
 from .base import BaseModel
 
 
-class RegistryEntryDisabler(Enum):
+class RegistryEntryDisabler(str, Enum):
     """What disabled a registry entry."""
 
     CONFIG_ENTRY = "config_entry"
@@ -19,7 +20,7 @@ class RegistryEntryDisabler(Enum):
     USER = "user"
 
 
-class EntityCategory(Enum):
+class EntityCategory(str, Enum):
     """Category of an entity.
 
     An entity with a category will:
@@ -31,7 +32,7 @@ class EntityCategory(Enum):
     DIAGNOSTIC = "diagnostic"
 
 
-class RegistryEntryHider(Enum):
+class RegistryEntryHider(str, Enum):
     """What hid a registry entry."""
 
     INTEGRATION = "integration"
@@ -92,7 +93,7 @@ class EntityConfigEntry(SimplifiedEntityConfigEntry):
     # TODO: Ensure valid default values
     previous_unique_id: Optional[str] = None
     aliases: set[str] = set()
-    capabilities: Optional[Dict[str, str]]
+    capabilities: Optional[Dict[str, Any]]
     created_at: datetime
     device_class: Optional[str]
     domain: Optional[str] = None
@@ -101,3 +102,29 @@ class EntityConfigEntry(SimplifiedEntityConfigEntry):
     original_icon: Optional[str]
     supported_features: Optional[int] = None
     unit_of_measurement: Optional[str] = None
+
+
+class UpdateEntityParams(TypedDict):
+    """Parameters for update_entity Websocket method."""
+
+    entity_id: str
+    aliases: NotRequired[List]
+    area_id: NotRequired[Optional[str]]
+    categories: NotRequired[Dict[str, str]]
+    device_class: NotRequired[Optional[str]]
+    icon: NotRequired[Optional[str]]
+    labels: NotRequired[List[str]]
+    name: NotRequired[Optional[str]]
+    new_entity_id: NotRequired[str]
+    disabled_by: NotRequired[Optional[Literal[RegistryEntryHider.USER]]]
+    hidden_by: NotRequired[Optional[Literal[RegistryEntryHider.USER]]]
+    # options and options_domain are inclusive, meaning only both or none of them have to be defined
+    options_domain: NotRequired[str]
+    options: NotRequired[Optional[Dict]]
+
+
+class UpdateEntityResponse(BaseModel):
+    """Response from update_entity Websocket method."""
+
+    entity_entry: EntityConfigEntry
+    reload_delay: int

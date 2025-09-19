@@ -11,6 +11,8 @@ from .entity_registry import (
     RegistryEntryDisabler,
     RegistryEntryHider,
     SimplifiedEntityConfigEntry,
+    UpdateEntityParams,
+    UpdateEntityResponse,
 )
 from .events import Event
 from .history import History
@@ -37,4 +39,6 @@ __all__ = (
     "DisplayConfigEntry",
     "DisplayConfigEntries",
     "EntityConfigEntry",
+    "UpdateEntityParams",
+    "UpdateEntityResponse",
 )

@@ -11,6 +11,8 @@ from homeassistant_api.models import (
     Group,
     SimplifiedEntityConfigEntry,
     State,
+    UpdateEntityParams,
+    UpdateEntityResponse,
 )
 from homeassistant_api.models.states import Context
 from homeassistant_api.models.websocket import (
@@ -202,6 +204,8 @@ class WebsocketClient(RawWebsocketClient):
         """
         return self.get_domains()[domain]
 
+    # entity_registry.py
+
     def get_entity_registry(self) -> Tuple[SimplifiedEntityConfigEntry]:
         """Get entities from entity_registry."""
         return tuple(
@@ -261,6 +265,18 @@ class WebsocketClient(RawWebsocketClient):
                 ).result,
             ).items()
         }
+
+    def update_entity(self, parameters: UpdateEntityParams) -> UpdateEntityResponse:
+        """Update an entity."""
+        return UpdateEntityResponse.from_json(
+            cast(
+                dict[str, JSONType],
+                cast(
+                    ResultResponse,
+                    self.recv(self.send("config/entity_registry/update", **parameters)),
+                ).result,
+            )
+        )
 
     def trigger_service(
         self,
