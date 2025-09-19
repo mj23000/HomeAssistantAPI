@@ -278,6 +278,10 @@ class WebsocketClient(RawWebsocketClient):
             )
         )
 
+    def remove_entity(self, entity_id: str) -> None:
+        """Remove an entity."""
+        self.recv(self.send("config/entity_registry/remove", entity_id=entity_id))
+
     def trigger_service(
         self,
         domain: str,
