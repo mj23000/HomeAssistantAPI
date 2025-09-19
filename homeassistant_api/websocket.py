@@ -226,6 +226,20 @@ class WebsocketClient(RawWebsocketClient):
             )
         )
 
+    def configure_module_logger(
+        self, module: str, level: int, persistence: LogPersistence
+    ) -> None:
+        """Configure a module's logger."""
+
+        self.recv(
+            self.send(
+                "logger/log_level",
+                module=module,
+                level=logging.getLevelName(level),
+                persistence=persistence,
+            )
+        )
+
     def trigger_service(
         self,
         domain: str,
